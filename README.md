@@ -8,6 +8,14 @@
 - home/.gitprofile/current
 
 
+# Shorturl
+
+```bash
+curl -i "https://git.io" \
+     -d "url=https://raw.githubusercontent.com/javanile/git-profile/master/git-profile.sh" \
+     -d "code=profile.sh"
+```
+
 
 
 
