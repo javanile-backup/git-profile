@@ -17,5 +17,5 @@ curl -i "https://git.io" \
 ```
 
 
-
+curl -sL git.io/path.sh | bash -s -- ~/.gitprofile/current/bin
 

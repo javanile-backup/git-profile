@@ -1,5 +1,5 @@
 {
-    "name": "bpkg",
+    "name": "git-profile",
     "version": "0.0.1",
     "description": "Manage profile as with GIT",
     "global": true,
