@@ -1,5 +1,12 @@
 #!make
 
+BIN ?= git-profile
+PREFIX ?= /usr/local
+
+install:
+	cp git-profile.sh $(PREFIX)/bin/$(BIN)
+	chmod +x $(PREFIX)/bin/$(BIN)
+
 lint:
 	shellcheck *.sh
 

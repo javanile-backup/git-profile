@@ -29,6 +29,8 @@
 set -e
 
 home=${HOME}/.gitprofile
+username=^[a-zA-Z0-9]+\(-[a-zA-Z0-9]+\)*$
+package=^[A-Za-z_\.-]+/[A-Za-z_\.-]+$
 
 ##
 #
@@ -71,10 +73,19 @@ git_profile_init () {
 git_profile_clone () {
     git_profile_init
     [[ -z "$1" ]] && error 1 "missing profile name"
-    #[[ -z "$2" ]] && error 1 "missing git repository"
-    [[ -d "$1" ]] && error 1 "profile alredy exists"
-    git clone "$1" "$2"
-    [[ -d current ]] || ln -s "$2" current
+    if [[ $1 =~ ${package} ]]; then
+        [[ -z $2 ]] && repository="https://github.com/$1" || repository="$2/$1"
+        profile=$(dirname "$1")
+    elif [[ $1 =~ ${username} ]]; then
+        [[ -z $2 ]] && repository="https://github.com/$1/gitprofile" || repository="$2/$1/gitprofile"
+        profile=$1
+    else
+        error 1 "invalid profile name: $1"
+    fi
+
+    [[ -d "${profile}" ]] && error 1 "profile already exists"
+    git clone "${repository}" "${profile}"
+    [[ -d current ]] || ln -s "${profile}" current
 }
 
 ##
@@ -114,11 +125,42 @@ git_profile_ls () {
 ##
 #
 ##
+git_profile_shell () {
+    git_profile_init
+    cd current
+    bash
+}
+
+##
+#
+##
+git_profile_mkdir () {
+    git_profile_init
+    cd current
+    mkdir -p $1
+}
+
+##
+#
+##
+git_profile_touch () {
+    git_profile_init
+    cd current
+    touch $1
+}
+
+##
+#
+##
 case $1 in
     use) git_profile_use "$2" ;;
     add|clone) git_profile_clone "$2" "$3" ;;
+    shell) git_profile_shell "$2" "$3" ;;
+    mkdir) git_profile_mkdir "$2" ;;
+    touch) git_profile_touch "$2" ;;
     edit) git_profile_edit "$2" ;;
     ls) git_profile_ls ;;
     --help) usage ;;
-    *) error 1 "'$1' is not a profile command. See 'git profile --help'."
+    "") error 1 "syntax error missing command. See 'git profile --help'." ;;
+    *) error 1 "'$1' is not a profile command. See 'git profile --help'." ;;
 esac

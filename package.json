@@ -1,0 +1,8 @@
+{
+    "name": "bpkg",
+    "version": "0.0.1",
+    "description": "Manage profile as with GIT",
+    "global": true,
+    "repo": "javanile/git-profile",
+    "install": "make install"
+}
